@@ -251,3 +251,85 @@ fetch("https://faas-blr1-8177d592.doserverless.co/api/v1/web/fn-1c23ee6f-939a-44
     "mode": "cors",
     "credentials": "omit"
   });
+
+
+
+
+  // OPENAI
+  
+  // import OpenAI from "openai";
+  
+  // const openai = new OpenAI({
+  //   apiKey:process.env.OPEN_API_KEY,
+  // });
+  
+  // const completion = openai.chat.completions.create({
+  //   model: "gpt-4o-mini",
+  //   store: true,
+  //   messages: [
+  //     {"role": "user", "content": "write a haiku about ai"},
+  //   ],
+  // });
+  
+  // completion.then((result) => console.log(result.choices[0].message));
+  
+  // gimini system instruction
+  // async function getAnswer(content){
+  //     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+  //     const model = genAI.getGenerativeModel(
+  //         { model: "gemini-2.0-flash",systemInstruction:"you are an AI model designed specifically to provide accurate answers for multiple-choice quiz questions. Your only task is to analyze the given question along with its provided answer choices and return the most correct option. Do not provide explanations—only return the correct option number"}
+  //     );
+  
+  //     const prompt = content;
+  
+  //     const result = await model.generateContent(prompt);
+  //     return (result.response.text());
+  
+  // }
+  
+  // getAnswer("What is the capital of Nigeria? OPTIONS ARE : (A) Lagos(B) Abuja (C) Kano (D) Ibadan").then((result) => console.log(result));
+  
+  //gimini as fetch
+  // fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyANGt6bbr0Vw7RG1_D5xCi-xVqgNECMndo", {
+  //     method: "POST",
+  //     headers: {
+  //         "Content-Type": "application/json"
+  //     },
+  //     body: JSON.stringify({
+  //         contents: [{
+  //             parts: [{ text: `you are an AI model designed specifically to provide accurate answers for multiple-choice quiz questions. Your only task is to analyze the given question along with its provided answer choices and return the most correct option. Do not provide explanations—only return the correct option` }]
+  //         }]
+  //     })
+  // })
+  // .then(response => response.json())
+  // .then(data => console.log(data.candidates[0].content.parts[0].text))
+  // .catch(error => console.error("Error:", error));
+  
+
+  // getAnswer({
+//   question: "What is the capital of Nigeria?",
+//   options: ["A) Lagos", "B) Abuja", "C) Kano", "D) Ibadan"],
+//   question_id: 1,
+// }).then((result) => console.log(result));
+
+
+//method2
+// getQuizQuestions({
+//     quiz_uc: "ej59",
+//     user_unique_code: "2022B1531039",
+//     pin: "8526",
+//   }).then((allQues) => {
+//     let index = 0;
+    
+//     const interval = setInterval(async () => {
+//       if (index >= allQues.length) {
+//         clearInterval(interval); // Stop when all questions are processed
+//         return;
+//       }
+  
+//       const result = await getAnswer(allQues[index]);
+//       console.log(result);
+//       index++;
+//     }, 1000); // Runs every 1 second
+//   });
+  
