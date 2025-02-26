@@ -115,42 +115,42 @@
 
 //   //ans submit 2
 
-//   curl 'https://faas-blr1-8177d592.doserverless.co/api/v1/web/fn-1c23ee6f-939a-44b2-9c4e-d17970ddd644/abes/submitAnswer' \
-//   -H 'accept: application/json, text/plain, */*' \
-//   -H 'accept-language: en-US,en;q=0.9,hi;q=0.8' \
-//   -H 'content-type: application/json' \
-//   -H 'dnt: 1' \
-//   -H 'origin: https://quiz.abesaims.site' \
-//   -H 'priority: u=1, i' \
-//   -H 'referer: https://quiz.abesaims.site/' \
-//   -H 'sec-ch-ua: "Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"' \
-//   -H 'sec-ch-ua-mobile: ?0' \
-//   -H 'sec-ch-ua-platform: "Linux"' \
-//   -H 'sec-fetch-dest: empty' \
-//   -H 'sec-fetch-mode: cors' \
-//   -H 'sec-fetch-site: cross-site' \
-//   -H 'user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36' \
-//   --data-raw '{"quiz_uc":"108F","question_id":6573996,"user_unique_code":"2022B1531039","answer":1,"pin":"8526"}'
+  // curl 'https://faas-blr1-8177d592.doserverless.co/api/v1/web/fn-1c23ee6f-939a-44b2-9c4e-d17970ddd644/abes/submitAnswer' \
+  // -H 'accept: application/json, text/plain, */*' \
+  // -H 'accept-language: en-US,en;q=0.9,hi;q=0.8' \
+  // -H 'content-type: application/json' \
+  // -H 'dnt: 1' \
+  // -H 'origin: https://quiz.abesaims.site' \
+  // -H 'priority: u=1, i' \
+  // -H 'referer: https://quiz.abesaims.site/' \
+  // -H 'sec-ch-ua: "Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"' \
+  // -H 'sec-ch-ua-mobile: ?0' \
+  // -H 'sec-ch-ua-platform: "Linux"' \
+  // -H 'sec-fetch-dest: empty' \
+  // -H 'sec-fetch-mode: cors' \
+  // -H 'sec-fetch-site: cross-site' \
+  // -H 'user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36' \
+  // --data-raw '{"quiz_uc":"108F","question_id":6573996,"user_unique_code":"2022B1531039","answer":1,"pin":"8526"}'
 
 
 
 //   //submit test
-//   curl 'https://faas-blr1-8177d592.doserverless.co/api/v1/web/fn-1c23ee6f-939a-44b2-9c4e-d17970ddd644/abes/submitAndExitQuiz' \
-//   -H 'accept: application/json, text/plain, */*' \
-//   -H 'accept-language: en-US,en;q=0.9,hi;q=0.8' \
-//   -H 'content-type: application/json' \
-//   -H 'dnt: 1' \
-//   -H 'origin: https://quiz.abesaims.site' \
-//   -H 'priority: u=1, i' \
-//   -H 'referer: https://quiz.abesaims.site/' \
-//   -H 'sec-ch-ua: "Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"' \
-//   -H 'sec-ch-ua-mobile: ?0' \
-//   -H 'sec-ch-ua-platform: "Linux"' \
-//   -H 'sec-fetch-dest: empty' \
-//   -H 'sec-fetch-mode: cors' \
-//   -H 'sec-fetch-site: cross-site' \
-//   -H 'user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36' \
-//   --data-raw '{"quiz_uc":"108F","user_unique_code":"2022B1531039","pin":"8526"}'
+  // curl 'https://faas-blr1-8177d592.doserverless.co/api/v1/web/fn-1c23ee6f-939a-44b2-9c4e-d17970ddd644/abes/submitAndExitQuiz' \
+  // -H 'accept: application/json, text/plain, */*' \
+  // -H 'accept-language: en-US,en;q=0.9,hi;q=0.8' \
+  // -H 'content-type: application/json' \
+  // -H 'dnt: 1' \
+  // -H 'origin: https://quiz.abesaims.site' \
+  // -H 'priority: u=1, i' \
+  // -H 'referer: https://quiz.abesaims.site/' \
+  // -H 'sec-ch-ua: "Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"' \
+  // -H 'sec-ch-ua-mobile: ?0' \
+  // -H 'sec-ch-ua-platform: "Linux"' \
+  // -H 'sec-fetch-dest: empty' \
+  // -H 'sec-fetch-mode: cors' \
+  // -H 'sec-fetch-site: cross-site' \
+  // -H 'user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36' \
+  // --data-raw '{"quiz_uc":"108F","user_unique_code":"2022B1531039","pin":"8526"}'
 
 
 
@@ -333,3 +333,85 @@ fetch("https://faas-blr1-8177d592.doserverless.co/api/v1/web/fn-1c23ee6f-939a-44
 //     }, 1000); // Runs every 1 second
 //   });
   
+
+
+
+
+//extras 
+// async function getAnswerFromDeepSeek(content) {
+//   const openai = new OpenAI({
+//     baseURL: "https://api.deepseek.com",
+//     apiKey: process.env.DEEPSEEK_API_KEY,
+//   });
+//   const prompt = `The question is ${content.question}, the options are ${content.options}, this is the question id ${content.question_id}`;
+
+//   const completion = await openai.chat.completions.create({
+//     messages: [
+//       {
+//         role: "system",
+//         content: "You are an AI model designed specifically to provide accurate answers for multiple-choice quiz questions. Your only task is to analyze the given question along with its provided answer choices and return {\"correct option index\", \"id\"}. Do not provide any explanations",
+//       },
+//       {
+//         role: "user",
+//         content: prompt,
+//       },
+//     ],
+//     model: "deepseek-chat",
+//   });
+
+//   console.log(completion.choices[0].message.content);
+// }
+
+// // gimini roles and parts
+// async function getAnswerFromGemini(content) {
+//   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+//   const schema = {
+//     description: "Response containing the correct answer index and question ID",
+//     type: SchemaType.OBJECT,
+//     properties: {
+//       correctOptionIndex: {
+//         type: SchemaType.NUMBER,
+//         description: "The index of the correct answer in the provided options",
+//         nullable: false,
+//       },
+//       id: {
+//         type: SchemaType.STRING,
+//         description: "The unique identifier of the question",
+//         nullable: false,
+//       },
+//     },
+//     required: ["correctOptionIndex", "id"]
+//   };
+
+//   const prompt = `The question is ${content.question}, the options are ${content.options}, this is the question id ${content.question_id}`;
+//   const model = genAI.getGenerativeModel({
+//     model: "gemini-1.5-pro",
+//     generationConfig: {
+//       responseMimeType: "application/json",
+//       responseSchema: schema,
+//     },
+//   });
+//   const result = await model.generateContent({
+//     contents: [
+//       {
+//         role: "model",
+//         parts: [
+//           {
+//             text: "You are an AI model designed specifically to provide accurate answers for multiple-choice quiz questions. Your only task is to analyze the given question along with its provided answer choices and return {\"correct option index\", \"id\"}. Do not provide any explanations"
+//           }
+//         ],
+//       },
+//       {
+//         role: "user",
+//         parts: [
+//           {
+//             text: prompt,
+//           },
+//         ],
+//       },
+//     ],
+//   });
+//   // const result = await model.generateContent(prompt)
+//   return result.response.text();
+// }
