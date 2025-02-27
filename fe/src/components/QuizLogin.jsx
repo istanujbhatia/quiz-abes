@@ -1,24 +1,70 @@
+import {
+  getQuizQuestions,
+  chooseAgent,
+  submitAnswers,
+  submitAndExitQuiz,
+  // quizDetails,
+} from "./quizBackend";
 import React, { useState } from "react";
-import './QuizLogin.css'
+import "./QuizLogin.css";
+
+
 const QuizLogin = () => {
   const [quizCode, setQuizCode] = useState("");
   const [admissionNumber, setAdmissionNumber] = useState("");
   const [pin, setPin] = useState("");
+  const [selectedModel, setSelectedModel] = useState("Gemini");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Quiz Code:", quizCode);
-    console.log("Admission Number:", admissionNumber);
-    console.log("PIN:", pin);
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent page refresh
+
+    const userDetails = {
+      quiz_uc: quizCode,
+      user_unique_code: admissionNumber,
+      pin: pin,
+    };
+
+    // console.log("User Details:", userDetails);
+
+    try {
+      const quizQuestions = await getQuizQuestions(userDetails); // Fetch quiz questions
+      // console.log("Quiz Questions:", quizQuestions);
+
+      const agent = chooseAgent(selectedModel); // Select the AI model
+      const answers = await agent(quizQuestions); // Get AI-generated answers
+
+      let formattedAnswers = answers.map((item) => ({
+        ...item,
+        correctOptionIndex: item.correctOptionIndex + 1, // Adjust index for API
+      }));
+
+      console.log("Formatted Answers:", formattedAnswers);
+
+      for (const ans of formattedAnswers) {
+        await submitAnswers(userDetails, ans); // Submit each answer
+      }
+
+      console.log("All answers submitted!");
+
+      // Submit and Exit the Quiz
+      await submitAndExitQuiz(userDetails);
+      console.log("Quiz submission completed.");
+    } catch (error) {
+      console.error("Error handling quiz:", error);
+    }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-teal-400 to-teal-200">
       <div className="bg-white p-8 rounded-2xl shadow-lg max-w-sm w-full">
-        <h2 className="text-xl font-semibold text-center mb-6">Enter Your Details</h2>
+        <h2 className="text-xl font-semibold text-center mb-6">
+          Enter Your Details
+        </h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-sm font-medium">Enter Quiz Code:</label>
+            <label className="block text-sm font-medium">
+              Enter Quiz Code:
+            </label>
             <input
               type="text"
               value={quizCode}
@@ -29,17 +75,22 @@ const QuizLogin = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium">Enter Admission Number:</label>
+            <label className="block text-sm font-medium">
+              Enter Admission Number:
+            </label>
             <input
               type="text"
+              maxLength={12}
               value={admissionNumber}
               onChange={(e) => setAdmissionNumber(e.target.value)}
               className="w-full mt-1 p-2 border rounded-lg"
               required
             />
           </div>
-          <div className="mb-6">
-            <label className="block text-sm font-medium">Enter 4 Digit Pin:</label>
+          <div className="mb-4">
+            <label className="block text-sm font-medium">
+              Enter 4 Digit Pin:
+            </label>
             <input
               type="password"
               value={pin}
@@ -49,6 +100,26 @@ const QuizLogin = () => {
               required
             />
           </div>
+          <div className="mb-6">
+            <label className="block text-sm font-medium">Select Model:</label>
+            <div className="flex gap-4 mt-2">
+              {["Gemini", "ChatGPT", "DeepSeek"].map((model) => (
+                <label key={model} className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    value={model}
+                    checked={selectedModel === model}
+                    onChange={(e) => setSelectedModel(e.target.value)}
+                    className="form-radio"
+                    disabled={model !== "Gemini"}
+                  />
+                  <span>
+                    {model} {model !== "Gemini" && "(Soon)"}
+                  </span>
+                </label>
+              ))}
+            </div>
+          </div>
           <button
             type="submit"
             className="w-full bg-teal-500 text-white py-2 rounded-lg hover:bg-teal-600"
@@ -57,13 +128,19 @@ const QuizLogin = () => {
           </button>
         </form>
         <div className="mt-6 text-sm text-gray-600">
-          <p><strong>Notes:</strong></p>
+          <p>
+            <strong>Important Notes:</strong>
+          </p>
           <ul className="list-disc pl-4">
-            <li><a href="#" className="text-blue-500">How do I get the quiz code?</a></li>
-            <li><a href="#" className="text-blue-500">How do I set my own 4 digit pin?</a></li>
-            <li>Zero and English alphabet O look similar. Be mindful.</li>
-            <li>The code will work only if the quiz is scheduled now.</li>
-            <li>If the quiz was completed in the past, you won’t be able to access it.</li>
+            <li>
+              The answers provided are generated by the selected model and may
+              not always be accurate.
+            </li>
+            <li>
+              You have the choice to review the answers before finalizing your
+              response.
+            </li>
+            <li>Marked answers may not be 100% correct.</li>
           </ul>
         </div>
       </div>
