@@ -3,7 +3,7 @@ import {
   chooseAgent,
   submitAnswers,
   submitAndExitQuiz,
-  // quizDetails,
+  getQuizDetails,
 } from "./quizBackend";
 import React, { useState } from "react";
 import "./QuizLogin.css";
@@ -27,28 +27,27 @@ const QuizLogin = () => {
     // console.log("User Details:", userDetails);
 
     try {
-      const quizQuestions = await getQuizQuestions(userDetails); // Fetch quiz questions
+      const details =await getQuizDetails(userDetails);
+      // console.log(details);
+      
+      
+      const prompts = await getQuizQuestions(userDetails); // Fetch quiz questions and retutn the prompt
       // console.log("Quiz Questions:", quizQuestions);
 
       const agent = chooseAgent(selectedModel); // Select the AI model
-      const answers = await agent(quizQuestions); // Get AI-generated answers
+      const answers = await agent(prompts); // Get AI-generated answers
 
-      let formattedAnswers = answers.map((item) => ({
-        ...item,
-        correctOptionIndex: item.correctOptionIndex + 1, // Adjust index for API
-      }));
+      console.log("Answers:", answers);
 
-      console.log("Formatted Answers:", formattedAnswers);
-
-      for (const ans of formattedAnswers) {
+      for (const ans of answers) {
         await submitAnswers(userDetails, ans); // Submit each answer
       }
 
       console.log("All answers submitted!");
 
       // Submit and Exit the Quiz
-      await submitAndExitQuiz(userDetails);
-      console.log("Quiz submission completed.");
+      // await submitAndExitQuiz(userDetails);
+      // console.log("Quiz submission completed.");
     } catch (error) {
       console.error("Error handling quiz:", error);
     }
