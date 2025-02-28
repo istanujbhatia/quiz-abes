@@ -4,10 +4,10 @@ import {
   submitAnswers,
   submitAndExitQuiz,
   getQuizDetails,
+  dbCheck,
 } from "./quizBackend";
 import React, { useState } from "react";
 import "./QuizLogin.css";
-
 
 const QuizLogin = () => {
   const [quizCode, setQuizCode] = useState("");
@@ -27,23 +27,96 @@ const QuizLogin = () => {
     // console.log("User Details:", userDetails);
 
     try {
-      const details =await getQuizDetails(userDetails);
+      const details = await getQuizDetails(userDetails);
       // console.log(details);
-      
-      
+
+      // { ye sb details me se aayega quiz ki
+
+      //     some conditions ckecked :
+      //     1. not started or indalid id popup
+      //     2. if window is there then start Timeer()
+      //     3. if quiz started (
+      //       i. user has not logged in then popup that window expired
+      //      ii. if user has logged in earlier ans then starts a quiz show ans yaha se full be vala kaam
+      // 4. if quiz expired
+      //     )
+      //
+      // now
       const prompts = await getQuizQuestions(userDetails); // Fetch quiz questions and retutn the prompt
-      // console.log("Quiz Questions:", quizQuestions);
 
-      const agent = chooseAgent(selectedModel); // Select the AI model
-      const answers = await agent(prompts); // Get AI-generated answers
+      // 1/db check
+      let dataFromDb=await dbCheck(userDetails,prompts)
+      // console.log(dataFromDb.success);
+      
+      if(dataFromDb.success){
 
-      console.log("Answers:", answers);
 
-      for (const ans of answers) {
-        await submitAnswers(userDetails, ans); // Submit each answer
+        console.log(dataFromDb);
+        
+
+      
+        
+        
+
+      }
+      else{
+        // get data from db again as till now data would be saved
+        dataFromDb=await dbCheck(userDetails,prompts)
+        console.log(dataFromDb);
+        
+
       }
 
-      console.log("All answers submitted!");
+
+
+      
+      /*either return true (if there existes a code)
+      {
+          sort ques
+          match 
+          ans mark 
+          show 
+          submit 
+          exit
+      }
+
+      if not exists 
+      {
+
+          put code in db
+          gimini call
+          map ques id with ans 
+          store
+      }
+
+
+
+
+
+
+
+
+
+
+
+
+*/
+
+
+
+      
+      // console.log("Quiz Questions:", quizQuestions);
+
+      //  // Select the AI model
+      // const answers = await agent(prompts); // Get AI-generated answers
+
+      // console.log("Answers:", answers);
+
+      // for (const ans of answers) {
+      //   await submitAnswers(userDetails, ans); // Submit each answer
+      // }
+
+      // console.log("All answers submitted!");
 
       // Submit and Exit the Quiz
       // await submitAndExitQuiz(userDetails);

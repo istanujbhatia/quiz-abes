@@ -30,31 +30,31 @@ export async function getQuizDetails(obj) {
   }
 }
 
-export async function getAnswerFromGemini(quizData) {
-  const url =
-    "http://localhost:3000/generate";
-  const headers = { "Content-Type": "application/json" };
-  const body = JSON.stringify(quizData)
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: headers,
-      body: body,
-    });
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    const answers= await response.json();
-    let formattedAnswers = answers.map((item) => ({
-      ...item,
-      correctOptionIndex: item.correctOptionIndex + 1, // Adjust index for API
-    }));
-    return formattedAnswers;
-  } catch (error) {
-    console.error("Error generating answers:", error);
-  }
+// export async function getAnswerFromGemini(quizData) {
+//   const url =
+//     "http://localhost:3000/generate";
+//   const headers = { "Content-Type": "application/json" };
+//   const body = JSON.stringify(quizData)
+//   try {
+//     const response = await fetch(url, {
+//       method: "POST",
+//       headers: headers,
+//       body: body,
+//     });
+//     if (!response.ok) {
+//       throw new Error(`HTTP error! Status: ${response.status}`);
+//     }
+//     const answers= await response.json();
+//     let formattedAnswers = answers.map((item) => ({
+//       ...item,
+//       correctOptionIndex: item.correctOptionIndex + 1, // Adjust index for API
+//     }));
+//     return formattedAnswers;
+//   } catch (error) {
+//     console.error("Error generating answers:", error);
+//   }
 
-}
+// }
 
 export async function getQuizQuestions(obj) {
   const url =
@@ -171,6 +171,29 @@ export async function submitAndExitQuiz(obj) {
 }
 
 
+export async function dbCheck(obj,prompt) {
+  const url = "http://localhost:3000/dbCheck";
+  
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({prompt:prompt,userDetails:obj}),
+    });
 
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const doExists = await response.json();
+    
+
+    return doExists// Return the fetched questions
+
+  } catch (error) {
+    console.error("something went wrong:", error);
+    return false; // Return false if an error occurs
+  }
+}
 
 
