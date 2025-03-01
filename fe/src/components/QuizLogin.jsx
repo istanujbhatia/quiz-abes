@@ -29,7 +29,7 @@ const QuizLogin = () => {
     // console.log("User Details:", userDetails);
 
     try {
-      // const details = await getQuizDetails(userDetails);
+      const details = await getQuizDetails(userDetails);
       // console.log(details);
 
       // { ye sb details me se aayega quiz ki
