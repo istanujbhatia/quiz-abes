@@ -4,7 +4,9 @@ import {
   submitAnswers,
   submitAndExitQuiz,
   getQuizDetails,
+  cleanJsonOptions,
   dbCheck,
+  // mapCorrectOptions,
 } from "./quizBackend";
 import React, { useState } from "react";
 import "./QuizLogin.css";
@@ -27,7 +29,7 @@ const QuizLogin = () => {
     // console.log("User Details:", userDetails);
 
     try {
-      const details = await getQuizDetails(userDetails);
+      // const details = await getQuizDetails(userDetails);
       // console.log(details);
 
       // { ye sb details me se aayega quiz ki
@@ -43,15 +45,22 @@ const QuizLogin = () => {
       //
       // now
       const prompts = await getQuizQuestions(userDetails); // Fetch quiz questions and retutn the prompt
-
+      // console.log(prompts);//acutal ques , options , id
+      
       // 1/db check
       let dataFromDb=await dbCheck(userDetails,prompts)
+      let finalData=cleanJsonOptions(prompts, dataFromDb.answers.ques)
+
+
+      
+      
       // console.log(dataFromDb.success);
       
       if(dataFromDb.success){
 
 
-        console.log(dataFromDb);
+        // // console.log(dataFromDb);
+        console.log(finalData);
         
 
       
@@ -62,7 +71,14 @@ const QuizLogin = () => {
       else{
         // get data from db again as till now data would be saved
         dataFromDb=await dbCheck(userDetails,prompts)
-        console.log(dataFromDb);
+        // console.log(dataFromDb);
+        // console.log(dataFromDb.answers.ques)
+        console.log(finalData);
+        
+
+        
+
+    
         
 
       }
@@ -112,9 +128,16 @@ const QuizLogin = () => {
 
       // console.log("Answers:", answers);
 
-      // for (const ans of answers) {
-      //   await submitAnswers(userDetails, ans); // Submit each answer
-      // }
+      for (const ans of finalData) {
+        let toSubmit={
+          correctOption:ans.correctOptionNumber,
+          id:ans.question_id
+
+        }
+        // console.log(ans);
+        
+        await submitAnswers(userDetails, toSubmit); // Submit each answer
+      }
 
       // console.log("All answers submitted!");
 

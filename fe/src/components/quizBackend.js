@@ -71,7 +71,6 @@ export async function getQuizQuestions(obj) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     const prompts = await response.json();
-    // console.log(prompts);
     return prompts;
   } catch (error) {
     console.error("Error fetching quiz questions:", error);
@@ -103,7 +102,7 @@ export async function submitAnswers(obj, ans) {
     quiz_uc: obj.quiz_uc,
     question_id: ans.id,
     user_unique_code: obj.user_unique_code,
-    answer: ans.correctOptionIndex,
+    answer: ans.correctOption,
     pin: obj.pin,
   });
   try {
@@ -197,3 +196,26 @@ export async function dbCheck(obj,prompt) {
 }
 
 
+export function cleanJsonOptions(data, correctAnswers){
+  return data.map(item => {
+      const correctAnswer = correctAnswers.find(answer => answer.id === item.question_id.toString());
+      const correctIndex = correctAnswer ? item.options.findIndex(opt => opt.replace(/<pre>|<\/pre>/g, "") === correctAnswer.correctOptionText) : -1;
+      
+      return {
+          question: item.question,
+          question_id: item.question_id,
+          options: item.options.map(opt => opt.replace(/<pre>|<\/pre>/g, "")),
+          correctOption: correctAnswer ? correctAnswer.correctOptionText : null,
+          correctOptionNumber: correctIndex+1
+      };
+  }).sort((a, b) => a.question_id - b.question_id);
+};
+
+// Example JSON inputs
+
+
+
+
+
+// Print cleaned JSON
+// console.log(JSON.stringify(cleanedData, null, 2));
