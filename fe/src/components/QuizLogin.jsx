@@ -46,46 +46,24 @@ const QuizLogin = () => {
       // now
       const prompts = await getQuizQuestions(userDetails); // Fetch quiz questions and retutn the prompt
       // console.log(prompts);//acutal ques , options , id
-      
+
       // 1/db check
-      let dataFromDb=await dbCheck(userDetails,prompts)
-      let finalData=cleanJsonOptions(prompts, dataFromDb.answers.ques)
+      let dataFromDb = await dbCheck(userDetails, prompts);
 
-
-      
-      
       // console.log(dataFromDb.success);
-      
-      if(dataFromDb.success){
+      let finalData;
+      if (dataFromDb.success) {
 
-
-        // // console.log(dataFromDb);
+        finalData = cleanJsonOptions(prompts, dataFromDb.answers.ques);
         console.log(finalData);
-        
+      } else {
 
-      
-        
-        
+        dataFromDb = await dbCheck(userDetails, prompts);
+        finalData = cleanJsonOptions(prompts, dataFromDb.answers.ques);
 
-      }
-      else{
-        // get data from db again as till now data would be saved
-        dataFromDb=await dbCheck(userDetails,prompts)
-        // console.log(dataFromDb);
-        // console.log(dataFromDb.answers.ques)
         console.log(finalData);
-        
-
-        
-
-    
-        
-
       }
 
-
-
-      
       /*either return true (if there existes a code)
       {
           sort ques
@@ -118,9 +96,6 @@ const QuizLogin = () => {
 
 */
 
-
-
-      
       // console.log("Quiz Questions:", quizQuestions);
 
       //  // Select the AI model
@@ -129,13 +104,12 @@ const QuizLogin = () => {
       // console.log("Answers:", answers);
 
       for (const ans of finalData) {
-        let toSubmit={
-          correctOption:ans.correctOptionNumber,
-          id:ans.question_id
-
-        }
+        let toSubmit = {
+          correctOption: ans.correctOptionNumber,
+          id: ans.question_id,
+        };
         // console.log(ans);
-        
+
         await submitAnswers(userDetails, toSubmit); // Submit each answer
       }
 
@@ -164,7 +138,8 @@ const QuizLogin = () => {
               type="text"
               value={quizCode}
               maxLength={4}
-              onChange={(e) => setQuizCode(e.target.value)}
+              minLength={4}
+              onChange={(e) => setQuizCode(e.target.value.toUpperCase())}
               className="w-full mt-1 p-2 border rounded-lg"
               required
             />
@@ -176,6 +151,7 @@ const QuizLogin = () => {
             <input
               type="text"
               maxLength={12}
+              minLength={12}
               value={admissionNumber}
               onChange={(e) => setAdmissionNumber(e.target.value)}
               className="w-full mt-1 p-2 border rounded-lg"
@@ -190,6 +166,7 @@ const QuizLogin = () => {
               type="password"
               value={pin}
               maxLength={4}
+              minLength={4}
               onChange={(e) => setPin(e.target.value)}
               className="w-full mt-1 p-2 border rounded-lg"
               required
