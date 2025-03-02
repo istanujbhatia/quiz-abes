@@ -6,9 +6,8 @@ import {
   getQuizDetails,
   cleanJsonOptions,
   dbCheck,
-  // mapCorrectOptions,
 } from "./quizBackend";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./QuizLogin.css";
 
 const QuizLogin = () => {
@@ -16,9 +15,33 @@ const QuizLogin = () => {
   const [admissionNumber, setAdmissionNumber] = useState("");
   const [pin, setPin] = useState("");
   const [selectedModel, setSelectedModel] = useState("Gemini");
+  const [quizStatus, setQuizStatus] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(null);
+  const [isDisabled, setIsDisabled] = useState(false);
+  // const [errorMessage, setErrorMessage] = useState("");
 
+  useEffect(() => {
+    let timer;
+    if (quizStatus === "login_active" && timeLeft > 0) {
+      timer = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev > 1) return prev - 1;
+          clearInterval(timer);
+          setQuizStatus("quiz_started"); 
+          setIsDisabled(false)// Transition to quiz started
+          return 0;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [quizStatus, timeLeft]);
+  
+
+
+  
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent page refresh
+    e.preventDefault();
+    // setErrorMessage("");
 
     const userDetails = {
       quiz_uc: quizCode,
@@ -26,98 +49,71 @@ const QuizLogin = () => {
       pin: pin,
     };
 
-    // console.log("User Details:", userDetails);
-
     try {
       const details = await getQuizDetails(userDetails);
-      // console.log(details);
 
-      // { ye sb details me se aayega quiz ki
 
-      //     some conditions ckecked :
-      //     1. not started or indalid id popup
-      //     2. if window is there then start Timeer()
-      //     3. if quiz started (
-      //       i. user has not logged in then popup that window expired
-      //      ii. if user has logged in earlier ans then starts a quiz show ans yaha se full be vala kaam
-      // 4. if quiz expired
-      //     )
-      //
-      // now
-      const prompts = await getQuizQuestions(userDetails); // Fetch quiz questions and retutn the prompt
-      // console.log(prompts);//acutal ques , options , id
 
-      // 1/db check
+
+
+      /* now form here just to add 
+      1. disable button when login to be start
+      2. checks for valid or invalid user {this will be given by the api}
+      3. map actual api response to the conditios below and change that hard coded timestamp
+      
+      
+      
+      
+      
+      */
+      if (!details.success) {
+        setQuizStatus("Invalid");
+        return;
+      }
+
+      const { login_time, start_time, end_time } = details;
+      const currentTime = new Date().getTime();
+
+      if (currentTime < login_time) {
+        setQuizStatus("waiting");
+        return;
+      }
+
+      if (currentTime > end_time) {
+        setQuizStatus("quiz_expired");
+        return;
+      }
+      if (currentTime >= login_time && currentTime < start_time) {
+        setQuizStatus("login_active");
+        setTimeLeft(Math.floor((start_time - currentTime) / 1000));
+        setIsDisabled(true);
+        return;
+      }
+
+
+
+      setQuizStatus("quiz_started");
+      setIsDisabled(false);
+      const prompts = await getQuizQuestions(userDetails);
       let dataFromDb = await dbCheck(userDetails, prompts);
-
-      // console.log(dataFromDb.success);
       let finalData;
       if (dataFromDb.success) {
-
         finalData = cleanJsonOptions(prompts, dataFromDb.answers.ques);
         console.log(finalData);
       } else {
-
         dataFromDb = await dbCheck(userDetails, prompts);
         finalData = cleanJsonOptions(prompts, dataFromDb.answers.ques);
 
         console.log(finalData);
       }
 
-      /*either return true (if there existes a code)
-      {
-          sort ques
-          match 
-          ans mark 
-          show 
-          submit 
-          exit
-      }
-
-      if not exists 
-      {
-
-          put code in db
-          gimini call
-          map ques id with ans 
-          store
-      }
-
-
-
-
-
-
-
-
-
-
-
-
-*/
-
-      // console.log("Quiz Questions:", quizQuestions);
-
-      //  // Select the AI model
-      // const answers = await agent(prompts); // Get AI-generated answers
-
-      // console.log("Answers:", answers);
-
       for (const ans of finalData) {
         let toSubmit = {
           correctOption: ans.correctOptionNumber,
           id: ans.question_id,
         };
-        // console.log(ans);
-
-        await submitAnswers(userDetails, toSubmit); // Submit each answer
+        await submitAnswers(userDetails, toSubmit);
       }
-
-      // console.log("All answers submitted!");
-
-      // Submit and Exit the Quiz
-      // await submitAndExitQuiz(userDetails);
-      // console.log("Quiz submission completed.");
     } catch (error) {
       console.error("Error handling quiz:", error);
     }
@@ -126,32 +122,33 @@ const QuizLogin = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-teal-400 to-teal-200">
       <div className="bg-white p-8 rounded-2xl shadow-lg max-w-sm w-full">
-        <h2 className="text-xl font-semibold text-center mb-6">
-          Enter Your Details
-        </h2>
+        <h2 className="text-xl font-semibold text-center mb-6">Enter Your Details</h2>
+        {quizStatus === "invalid" && <p className="text-red-500 text-center">Invalid Quiz Code. Please try again.</p>}
+        {quizStatus === "waiting" && <p className="text-blue-500 text-center">Login window will start soon...</p>}
+        {quizStatus === "login_active" && timeLeft > 0 && (
+  <p className="text-green-500 text-center">Quiz will start in {timeLeft} seconds.</p>
+)}
+        {quizStatus === "quiz_started" && <p className="text-green-600 text-center">Quiz started!</p>}
+
+{/*make it to automatically login for the user so no user faces quiz window expire issue */}
+        {quizStatus === "quiz_expired" && <p className="text-red-500 text-center">Quiz session has expired.</p>}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-sm font-medium">
-              Enter Quiz Code:
-            </label>
+            <label className="block text-sm font-medium">Enter Quiz Code:</label>
             <input
               type="text"
               value={quizCode}
               maxLength={4}
-              minLength={4}
               onChange={(e) => setQuizCode(e.target.value.toUpperCase())}
               className="w-full mt-1 p-2 border rounded-lg"
               required
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium">
-              Enter Admission Number:
-            </label>
+            <label className="block text-sm font-medium">Enter Admission Number:</label>
             <input
               type="text"
               maxLength={12}
-              minLength={12}
               value={admissionNumber}
               onChange={(e) => setAdmissionNumber(e.target.value)}
               className="w-full mt-1 p-2 border rounded-lg"
@@ -159,62 +156,20 @@ const QuizLogin = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium">
-              Enter 4 Digit Pin:
-            </label>
+            <label className="block text-sm font-medium">Enter 4 Digit Pin:</label>
             <input
               type="password"
               value={pin}
               maxLength={4}
-              minLength={4}
               onChange={(e) => setPin(e.target.value)}
               className="w-full mt-1 p-2 border rounded-lg"
               required
             />
           </div>
-          <div className="mb-6">
-            <label className="block text-sm font-medium">Select Model:</label>
-            <div className="flex gap-4 mt-2">
-              {["Gemini", "ChatGPT", "DeepSeek"].map((model) => (
-                <label key={model} className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    value={model}
-                    checked={selectedModel === model}
-                    onChange={(e) => setSelectedModel(e.target.value)}
-                    className="form-radio"
-                    disabled={model !== "Gemini"}
-                  />
-                  <span>
-                    {model} {model !== "Gemini" && "(Soon)"}
-                  </span>
-                </label>
-              ))}
-            </div>
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-teal-500 text-white py-2 rounded-lg hover:bg-teal-600"
-          >
+          <button type="submit" disabled={isDisabled} className={`w-full py-2 rounded-lg ${isDisabled ? "bg-gray-400" : "bg-teal-500 hover:bg-teal-600 text-white"}`}>
             Continue
           </button>
         </form>
-        <div className="mt-6 text-sm text-gray-600">
-          <p>
-            <strong>Important Notes:</strong>
-          </p>
-          <ul className="list-disc pl-4">
-            <li>
-              The answers provided are generated by the selected model and may
-              not always be accurate.
-            </li>
-            <li>
-              You have the choice to review the answers before finalizing your
-              response.
-            </li>
-            <li>Marked answers may not be 100% correct.</li>
-          </ul>
-        </div>
       </div>
     </div>
   );

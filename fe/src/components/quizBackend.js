@@ -11,7 +11,7 @@ export function chooseAgent(value) {
 }
 export async function getQuizDetails(obj) {
   const url =
-    "https://quiz-abes-server-production.up.railway.app/quizdetails"
+    "http://localhost:3000/quizDetails"
   const headers = { "Content-Type": "application/json" };
   const body = JSON.stringify(obj)
   try {
@@ -23,6 +23,9 @@ export async function getQuizDetails(obj) {
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
+
+
+    
     const details= await response.json();
     return details;
   } catch (error) {
