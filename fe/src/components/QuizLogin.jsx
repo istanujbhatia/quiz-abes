@@ -21,7 +21,15 @@ const QuizLogin = () => {
   const [isDisabled, setIsDisabled] = useState(false);
   // const [errorMessage, setErrorMessage] = useState("");
 
-
+  useEffect(() => {
+    // Load saved user details from local storage
+    const savedDetails = JSON.parse(localStorage.getItem("userDetails"));
+    if (savedDetails) {
+      setQuizCode(savedDetails.quiz_uc || "");
+      setAdmissionNumber(savedDetails.user_unique_code || "");
+      setPin(savedDetails.pin || "");
+    }
+  }, []);
 
   useEffect(() => {
     let loginTimer;
@@ -64,6 +72,7 @@ const QuizLogin = () => {
       user_unique_code: admissionNumber,
       pin: pin,
     };
+    localStorage.setItem("userDetails", JSON.stringify(userDetails));
 
     try {
       const details = await getQuizDetails(userDetails);
@@ -118,14 +127,14 @@ const QuizLogin = () => {
 
         console.log(finalData);
       }
-
-      for (const ans of finalData) {
-        let toSubmit = {
-          correctOption: ans.correctOptionNumber,
-          id: ans.question_id,
-        };
-        await submitAnswers(userDetails, toSubmit);
-      }
+      //ans submit 
+      // for (const ans of finalData) {
+      //   let toSubmit = {
+      //     correctOption: ans.correctOptionNumber,
+      //     id: ans.question_id,
+      //   };
+      //   await submitAnswers(userDetails, toSubmit);
+      // }
     } catch (error) {
       console.error("Error handling quiz:", error);
     }
@@ -145,6 +154,7 @@ const QuizLogin = () => {
         {quizStatus === "waiting" && (
           <p className="text-blue-500 text-center">Login window will start in {loginTimeLeft} seconds...</p>
         )}
+        
         {quizStatus === "login_active" && timeLeft > 0 && (
           <p className="text-green-500 text-center">
 
