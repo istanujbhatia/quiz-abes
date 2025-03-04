@@ -186,6 +186,7 @@ const QuizLogin = () => {
               type="text"
               value={quizCode}
               maxLength={4}
+              minLength={4}
               onChange={(e) => setQuizCode(e.target.value.toUpperCase())}
               className="w-full mt-1 p-2 border rounded-lg"
               required
@@ -198,8 +199,9 @@ const QuizLogin = () => {
             <input
               type="text"
               maxLength={12}
+              minLength={12}
               value={admissionNumber}
-              onChange={(e) => setAdmissionNumber(e.target.value)}
+              onChange={(e) => setAdmissionNumber(e.target.value.toUpperCase())}
               className="w-full mt-1 p-2 border rounded-lg"
               required
             />
@@ -212,6 +214,7 @@ const QuizLogin = () => {
               type="password"
               value={pin}
               maxLength={4}
+              minLength={4}
               onChange={(e) => setPin(e.target.value)}
               className="w-full mt-1 p-2 border rounded-lg"
               required

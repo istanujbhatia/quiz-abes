@@ -423,13 +423,13 @@ fetch("https://faas-blr1-8177d592.doserverless.co/api/v1/web/fn-1c23ee6f-939a-44
 
 
 
-// if code invalid
-// {
-//   "msg": "Invalid Quiz ID",
-//   "response": {
-//       "data": []
-//   }
-// }
+if code invalid
+{
+  "msg": "Invalid Quiz ID",
+  "response": {
+      "data": []
+  }
+}
 
 //missing req ka res shod be that window goind to start  , window se pehle login krte hai to kiya aata hai
 
@@ -441,7 +441,7 @@ fetch("https://faas-blr1-8177d592.doserverless.co/api/v1/web/fn-1c23ee6f-939a-44
 
 // {"response":{"data":{"total_marks":"10","id":17682,"cdata":{"subject":"","course_name":"Object Oriented System Design with C++","instructions":null,"date_formatted":"19-Dec-2024","start_end_time":"01:52pm - 01:59pm","academic_session":"2024-25","end_time_formatted":"01:59pm 19-Dec-2024","login_time_formatted":"01:49pm 19-Dec-2024","start_time_formatted":"01:52pm 19-Dec-2024","debarred_students_count":"0","exempted_students_count":"0"},"unique_code":"108F","login_time":"2024-12-19 13:49:00","batch":"2026","section":"A","faculty_name":"UTKARSH DIXIT","master_course_code":"BCS054","dept":"CSE (AIML)","list_id":"20392","group":null,"course_id":7188114,"batch_id":961,"semester":5,"faculty_id":6359958,"dept_id":772,"cf_id":7193171,"duration":7,"login_window":3,"questions_count":"7","start_time":"2024-12-19 13:52:00","end_time":"2024-12-19 13:59:00"}},"time_now":"2024-12-19 13:51:31"}
 
-//if window expired
+// if window expired
 // {
 //   "response": {
 //       "data": {
