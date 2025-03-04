@@ -54,7 +54,6 @@ const QuizLogin = () => {
         setMessage(
           `Login will start at ${new Date(login_time).toLocaleString()}`
         );
-        // setIsDisabled(true);
         return;
       }
 
@@ -69,27 +68,16 @@ const QuizLogin = () => {
         setMessage(
           `Quiz will start at ${new Date(start_time).toLocaleString()}`
         );
-        // setIsDisabled(true);
         return;
       }
 
       setQuizStatus("quiz_started");
-      setMessage(
-        `Quiz has started`
-      );
+      setMessage(`Quiz has started`);
       setIsDisabled(true);
       const prompts = await getQuizQuestions(userDetails);
       let dataFromDb = await dbCheck(userDetails, prompts);
       let finalData;
-      // if (dataFromDb.success) {
-      //   finalData = cleanJsonOptions(prompts, dataFromDb.answers.ques);
-      //   console.log(finalData);
-      // } else {
-      //   dataFromDb = await dbCheck(userDetails, prompts);
-      //   finalData = cleanJsonOptions(prompts, dataFromDb.answers.ques);
-
-      //   console.log(finalData);
-      // }
+      
       if (dataFromDb.success) {
         finalData = dataFromDb.answers.ques;
         console.log(dataFromDb.answers.ques);
@@ -98,7 +86,7 @@ const QuizLogin = () => {
         finalData = dataFromDb.answers.ques;
         console.log(dataFromDb.answers.ques);
       }
-      // ans submit
+
       for (const ans of finalData) {
         let toSubmit = {
           correctOption: ans.correctOptionNumber,
@@ -112,17 +100,27 @@ const QuizLogin = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-teal-400 to-teal-200">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-teal-400 to-teal-200 space-y-6">
+      {/* Disclaimer Box - Separate from Form */}
+      
+      <div className="bg-red-500 text-white text-center p-4 w-full max-w-md rounded-lg shadow-md text-lg font-semibold">
+      <h2 className="text-xl font-semibold text-center text-black">
+          Disclaimer
+        </h2>
+        This app is in the testing phase. After the quiz starts, clicking "Continue" will mark answers but will NOT submit and exit the quiz. Please verify your answers on the official site.
+        <br />
+        <a href="https://quiz.abesaims.site/" target="_blank">quiz.abesaims.site</a>
+      </div>
+  
+      {/* Login Form */}
       <div className="bg-white p-8 rounded-2xl shadow-lg max-w-sm w-full">
-        <h2 className="text-xl font-semibold text-center mb-6">
+        <h2 className="text-xl font-semibold text-center mb-6 text-black-700">
           Enter Your Details
         </h2>
         {message && <p className="text-center text-red-500">{message}</p>}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-sm font-medium">
-              Enter Quiz Code:
-            </label>
+            <label className="block text-sm font-medium">Enter Quiz Code:</label>
             <input
               type="text"
               value={quizCode}
@@ -148,9 +146,7 @@ const QuizLogin = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium">
-              Enter 4 Digit Pin:
-            </label>
+            <label className="block text-sm font-medium">Enter 4 Digit Pin:</label>
             <input
               type="password"
               value={pin}
@@ -165,9 +161,7 @@ const QuizLogin = () => {
             type="submit"
             disabled={isDisabled}
             className={`w-full py-2 rounded-lg ${
-              isDisabled
-                ? "bg-gray-400"
-                : "bg-teal-500 hover:bg-teal-600 text-white"
+              isDisabled ? "bg-gray-400" : "bg-teal-500 hover:bg-teal-600 text-white"
             }`}
           >
             Continue
@@ -176,6 +170,8 @@ const QuizLogin = () => {
       </div>
     </div>
   );
+  
+  
 };
 
 export default QuizLogin;
