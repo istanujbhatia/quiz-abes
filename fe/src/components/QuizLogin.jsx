@@ -4,7 +4,6 @@ import {
   submitAnswers,
   submitAndExitQuiz,
   getQuizDetails,
-  // cleanJsonOptions,
   dbCheck,
 } from "./quizBackend";
 import React, { useState, useEffect } from "react";
@@ -14,12 +13,9 @@ const QuizLogin = () => {
   const [quizCode, setQuizCode] = useState("");
   const [admissionNumber, setAdmissionNumber] = useState("");
   const [pin, setPin] = useState("");
-  const [selectedModel, setSelectedModel] = useState("Gemini");
   const [quizStatus, setQuizStatus] = useState(null);
-  const [timeLeft, setTimeLeft] = useState(null);
-  const [loginTimeLeft, setLoginTimeLeft] = useState(null);
+  const [message, setMessage] = useState("");
   const [isDisabled, setIsDisabled] = useState(false);
-  // const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     // Load saved user details from local storage
@@ -31,41 +27,8 @@ const QuizLogin = () => {
     }
   }, []);
 
-  useEffect(() => {
-    let loginTimer;
-    if (quizStatus === "waiting" && loginTimeLeft > 0) {
-      loginTimer = setInterval(() => {
-        setLoginTimeLeft((prev) => {
-          if (prev > 1) return prev - 1;
-          clearInterval(loginTimer);
-          setQuizStatus("login_active");
-          setIsDisabled(false);
-          return 0;
-        });
-      }, 1000);
-    }
-    return () => clearInterval(loginTimer);
-  }, [quizStatus, loginTimeLeft]);
-
-  useEffect(() => {
-    let timer;
-    if (quizStatus === "login_active" && timeLeft > 0) {
-      timer = setInterval(() => {
-        setTimeLeft((prev) => {
-          if (prev > 1) return prev - 1;
-          clearInterval(timer);
-          setQuizStatus("quiz_started");
-          setIsDisabled(false); // Transition to quiz started
-          return 0;
-        });
-      }, 1000);
-    }
-    return () => clearInterval(timer);
-  }, [quizStatus, timeLeft]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // setErrorMessage("");
 
     const userDetails = {
       quiz_uc: quizCode,
@@ -77,18 +40,9 @@ const QuizLogin = () => {
     try {
       const details = await getQuizDetails(userDetails);
 
-      /* now form here just to add 
-      1. disable button when login to be start
-      2. checks for valid or invalid user {this will be given by the api}
-      3. map actual api response to the conditios below and change that hard coded timestamp
-      
-      
-      
-      
-      
-      */
       if (!details.success) {
-        setQuizStatus("Invalid");
+        setQuizStatus("invalid");
+        setMessage(details.msg || "Something went wrong");
         return;
       }
 
@@ -97,24 +51,33 @@ const QuizLogin = () => {
 
       if (currentTime < login_time) {
         setQuizStatus("waiting");
-        setLoginTimeLeft(Math.floor((login_time - currentTime) / 1000));
-        setIsDisabled(true);
+        setMessage(
+          `Login will start at ${new Date(login_time).toLocaleString()}`
+        );
+        // setIsDisabled(true);
         return;
       }
 
       if (currentTime > end_time) {
         setQuizStatus("quiz_expired");
+        setMessage("Quiz session has expired.");
         return;
       }
+
       if (currentTime >= login_time && currentTime < start_time) {
         setQuizStatus("login_active");
-        setTimeLeft(Math.floor((start_time - currentTime) / 1000));
-        setIsDisabled(true);
+        setMessage(
+          `Quiz will start at ${new Date(start_time).toLocaleString()}`
+        );
+        // setIsDisabled(true);
         return;
       }
 
       setQuizStatus("quiz_started");
-      setIsDisabled(false);
+      setMessage(
+        `Quiz has started`
+      );
+      setIsDisabled(true);
       const prompts = await getQuizQuestions(userDetails);
       let dataFromDb = await dbCheck(userDetails, prompts);
       let finalData;
@@ -128,21 +91,21 @@ const QuizLogin = () => {
       //   console.log(finalData);
       // }
       if (dataFromDb.success) {
-        finalData=dataFromDb.answers.ques;
+        finalData = dataFromDb.answers.ques;
         console.log(dataFromDb.answers.ques);
       } else {
         dataFromDb = await dbCheck(userDetails, prompts);
-        finalData=dataFromDb.answers.ques;
+        finalData = dataFromDb.answers.ques;
         console.log(dataFromDb.answers.ques);
       }
-      //ans submit 
-      // for (const ans of finalData) {
-      //   let toSubmit = {
-      //     correctOption: ans.correctOptionNumber,
-      //     id: ans.question_id,
-      //   };
-      //   await submitAnswers(userDetails, toSubmit);
-      // }
+      // ans submit
+      for (const ans of finalData) {
+        let toSubmit = {
+          correctOption: ans.correctOptionNumber,
+          id: ans.question_id,
+        };
+        await submitAnswers(userDetails, toSubmit);
+      }
     } catch (error) {
       console.error("Error handling quiz:", error);
     }
@@ -154,29 +117,7 @@ const QuizLogin = () => {
         <h2 className="text-xl font-semibold text-center mb-6">
           Enter Your Details
         </h2>
-        {quizStatus === "invalid" && (
-          <p className="text-red-500 text-center">
-            Invalid Quiz Code. Please try again.
-          </p>
-        )}
-        {quizStatus === "waiting" && (
-          <p className="text-blue-500 text-center">Login window will start in {loginTimeLeft} seconds...</p>
-        )}
-        
-        {quizStatus === "login_active" && timeLeft > 0 && (
-          <p className="text-green-500 text-center">
-
-            Quiz will start in {timeLeft} seconds.
-          </p>
-        )}
-        {quizStatus === "quiz_started" && (
-          <p className="text-green-600 text-center">Quiz started!</p>
-        )}
-
-        {/*make it to automatically login for the user so no user faces quiz window expire issue */}
-        {quizStatus === "quiz_expired" && (
-          <p className="text-red-500 text-center">Quiz session has expired.</p>
-        )}
+        {message && <p className="text-center text-red-500">{message}</p>}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-sm font-medium">

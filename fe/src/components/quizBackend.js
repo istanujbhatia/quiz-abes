@@ -11,7 +11,7 @@ export function chooseAgent(value) {
 }
 export async function getQuizDetails(obj) {
   const url =
-    "http://localhost:3000/quizDetails"
+    "https://quiz-abes-server-production.up.railway.app/quizDetails"
   const headers = { "Content-Type": "application/json" };
   const body = JSON.stringify(obj)
   try {
@@ -37,7 +37,7 @@ export async function getQuizDetails(obj) {
 
 export async function getQuizQuestions(obj) {
   const url =
-    "http://localhost:3000/questions";
+    "https://quiz-abes-server-production.up.railway.app/questions";
   const headers = { "Content-Type": "application/json" };
   const body = JSON.stringify(obj);
   try {
@@ -150,7 +150,7 @@ export async function submitAndExitQuiz(obj) {
 
 
 export async function dbCheck(obj,prompt) {
-  const url = "http://localhost:3000/dbCheck";
+  const url = "https://quiz-abes-server-production.up.railway.app/dbCheck";
   
   try {
     const response = await fetch(url, {
