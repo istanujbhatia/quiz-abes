@@ -37,7 +37,7 @@ export async function getQuizDetails(obj) {
 
 export async function getQuizQuestions(obj) {
   const url =
-    "https://quiz-abes-server-production.up.railway.app/questions";
+    "http://localhost:3000/questions";
   const headers = { "Content-Type": "application/json" };
   const body = JSON.stringify(obj);
   try {
@@ -150,7 +150,7 @@ export async function submitAndExitQuiz(obj) {
 
 
 export async function dbCheck(obj,prompt) {
-  const url = "https://quiz-abes-server-production.up.railway.app/dbCheck";
+  const url = "http://localhost:3000/dbCheck";
   
   try {
     const response = await fetch(url, {
@@ -175,20 +175,20 @@ export async function dbCheck(obj,prompt) {
 }
 
 
-export function cleanJsonOptions(data, correctAnswers){
-  return data.map(item => {
-      const correctAnswer = correctAnswers.find(answer => answer.id === item.question_id.toString());
-      const correctIndex = correctAnswer ? item.options.findIndex(opt => opt.replace(/<pre>|<\/pre>/g, "") === correctAnswer.correctOptionText) : -1;
+// export function cleanJsonOptions(data, correctAnswers){
+//   return data.map(item => {
+//       const correctAnswer = correctAnswers.find(answer => answer.id === item.question_id.toString());
+//       const correctIndex = correctAnswer ? item.options.findIndex(opt => opt.replace(/<pre>|<\/pre>/g, "") === correctAnswer.correctOptionText) : -1;
       
-      return {
-          question: item.question,
-          question_id: item.question_id,
-          options: item.options.map(opt => opt.replace(/<pre>|<\/pre>/g, "")),
-          correctOption: correctAnswer ? correctAnswer.correctOptionText : null,
-          correctOptionNumber: correctIndex+1
-      };
-  }).sort((a, b) => a.question_id - b.question_id);
-};
+//       return {
+//           question: item.question,
+//           question_id: item.question_id,
+//           options: item.options.map(opt => opt.replace(/<pre>|<\/pre>/g, "")),
+//           correctOption: correctAnswer ? correctAnswer.correctOptionText : null,
+//           correctOptionNumber: correctIndex+1
+//       };
+//   }).sort((a, b) => a.question_id - b.question_id);
+// };
 
 // Example JSON inputs
 

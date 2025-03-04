@@ -4,7 +4,7 @@ import {
   submitAnswers,
   submitAndExitQuiz,
   getQuizDetails,
-  cleanJsonOptions,
+  // cleanJsonOptions,
   dbCheck,
 } from "./quizBackend";
 import React, { useState, useEffect } from "react";
@@ -118,14 +118,22 @@ const QuizLogin = () => {
       const prompts = await getQuizQuestions(userDetails);
       let dataFromDb = await dbCheck(userDetails, prompts);
       let finalData;
+      // if (dataFromDb.success) {
+      //   finalData = cleanJsonOptions(prompts, dataFromDb.answers.ques);
+      //   console.log(finalData);
+      // } else {
+      //   dataFromDb = await dbCheck(userDetails, prompts);
+      //   finalData = cleanJsonOptions(prompts, dataFromDb.answers.ques);
+
+      //   console.log(finalData);
+      // }
       if (dataFromDb.success) {
-        finalData = cleanJsonOptions(prompts, dataFromDb.answers.ques);
-        console.log(finalData);
+        finalData=dataFromDb.answers.ques;
+        console.log(dataFromDb.answers.ques);
       } else {
         dataFromDb = await dbCheck(userDetails, prompts);
-        finalData = cleanJsonOptions(prompts, dataFromDb.answers.ques);
-
-        console.log(finalData);
+        finalData=dataFromDb.answers.ques;
+        console.log(dataFromDb.answers.ques);
       }
       //ans submit 
       // for (const ans of finalData) {
