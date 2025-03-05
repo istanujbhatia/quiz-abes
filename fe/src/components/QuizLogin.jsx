@@ -52,7 +52,7 @@ const QuizLogin = () => {
       if (currentTime < login_time) {
         setQuizStatus("waiting");
         setMessage(
-          `Login will start at ${new Date(login_time).toLocaleString()}`
+          `Login will start at ${new Date(login_time).toUTCString()}`
         );
         return;
       }
@@ -66,7 +66,7 @@ const QuizLogin = () => {
       if (currentTime >= login_time && currentTime < start_time) {
         setQuizStatus("login_active");
         setMessage(
-          `Quiz will start at ${new Date(start_time).toLocaleString()}`
+          `Quiz will start at ${new Date(start_time).toUTCString()}`
         );
         return;
       }
