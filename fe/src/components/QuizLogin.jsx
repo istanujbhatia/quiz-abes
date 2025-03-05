@@ -2,7 +2,7 @@ import {
   getQuizQuestions,
   chooseAgent,
   submitAnswers,
-  // submitAndExitQuiz,
+  submitAndExitQuiz,
   getQuizDetails,
   dbCheck,
 } from "./quizBackend";
