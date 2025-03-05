@@ -2,7 +2,7 @@ import {
   getQuizQuestions,
   chooseAgent,
   submitAnswers,
-  submitAndExitQuiz,
+  // submitAndExitQuiz,
   getQuizDetails,
   dbCheck,
 } from "./quizBackend";
@@ -77,21 +77,25 @@ const QuizLogin = () => {
       const prompts = await getQuizQuestions(userDetails);
       let dataFromDb = await dbCheck(userDetails, prompts);
       let finalData;
+      console.log(prompts);
+      
       
       if (dataFromDb.success) {
         finalData = dataFromDb.answers.ques;
-        console.log(dataFromDb.answers.ques);
+        console.log(finalData);
       } else {
         dataFromDb = await dbCheck(userDetails, prompts);
         finalData = dataFromDb.answers.ques;
-        console.log(dataFromDb.answers.ques);
+        console.log(finalData);
       }
 
       for (const ans of finalData) {
         let toSubmit = {
-          correctOption: ans.correctOptionNumber,
-          id: ans.question_id,
+          correctOption: ans.correctOptionIndex,
+          id: ans.id,
         };
+        console.log(toSubmit);
+        
         await submitAnswers(userDetails, toSubmit);
       }
     } catch (error) {
