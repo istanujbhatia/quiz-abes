@@ -29,6 +29,13 @@ const QuizLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsDisabled(true);
+
+    setTimeout(() => {
+      // Re-enable button after 2 seconds
+      setIsDisabled(false);
+    }, 2000);
+  
 
     const userDetails = {
       quiz_uc: quizCode,
