@@ -46,8 +46,8 @@ const QuizLogin = () => {
         return;
       }
 
-      const { login_time, start_time, end_time } = details;
-      const currentTime = new Date().getTime();
+      const { login_time, start_time, end_time ,currentTime } = details;
+      // const currentTime = new Date().getTime();
 
       if (currentTime < login_time) {
         setQuizStatus("waiting");
