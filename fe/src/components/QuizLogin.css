@@ -1,1 +1,36 @@
 @import "tailwindcss";
+.fullscreen-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.5); /* Semi-transparent white background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+  
+/* HTML: <div class="loader"></div> */
+.loader {
+    height: 80px;
+    aspect-ratio: 1;
+    box-sizing: border-box;
+    position: relative;
+    mask: 
+      radial-gradient(#0000 47%,#000 48% 71%,#0000 72%) exclude,
+      conic-gradient(#000 0 0) no-clip;
+    animation: l11 1s linear infinite;
+  }
+  .loader:before {
+    content: "";
+    position: absolute;
+    inset: 0 35% 70%;
+    border-radius: 50%;
+    background: #000;
+    filter: blur(15px);
+  }
+  @keyframes l11 {
+    to {rotate: 1turn}
+  }
