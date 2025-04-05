@@ -40,7 +40,6 @@ const QuizLogin = () => {
 
     setTimeout(() => {
       setIsDisabled(false);
-      setShowLoader(false);
     }, 4000);
   
     const userDetails = {
@@ -55,7 +54,9 @@ const QuizLogin = () => {
 
       if (!details.success) {
         setQuizStatus("invalid");
+        setShowLoader(false);
         setMessage(details.msg || "Something went wrong");
+
         return;
       }
 
