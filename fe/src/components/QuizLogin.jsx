@@ -148,22 +148,6 @@ const QuizLogin = () => {
         </div>
       )}
 
-      <div
-        className={`${
-          darkMode ? "bg-red-700 text-white" : "bg-red-500 text-black"
-        } text-center p-4 w-full max-w-md rounded-lg shadow-md text-lg font-semibold`}
-      >
-        <h2 className="text-xl font-semibold text-center">Disclaimer</h2>
-        Please verify your answers on the official site.
-        <br />
-        <a
-          href="https://abesquiz.netlify.app/"
-          target="_blank"
-          className="font-medium underline hover:no-underline"
-        >
-          abesquiz.netlify.app
-        </a>
-      </div>
 
       <div
         className={`${
