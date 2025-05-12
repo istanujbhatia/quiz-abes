@@ -9,18 +9,17 @@ import {
 import React, { useState, useEffect } from "react";
 import { Sun, Moon } from "lucide-react";
 import "./QuizLogin.css";
+import InstallPrompt from "./InstallPrompt";
 
 const QuizLogin = () => {
   const [quizCode, setQuizCode] = useState("");
   const [admissionNumber, setAdmissionNumber] = useState("");
   const [pin, setPin] = useState("");
-  // const [quizStatus, setQuizStatus] = useState(null);
   const [message, setMessage] = useState("");
   const [isDisabled, setIsDisabled] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
-  // const urlRef = useRef("https://abesquiz.netlify.app");
-  // const hasRun = useRef(false);
+  // const [totalLogins, setTotalLogins] = useState(0);  // Track the total logins
 
   useEffect(() => {
     const savedDetails = JSON.parse(localStorage.getItem("userDetails"));
@@ -34,6 +33,12 @@ const QuizLogin = () => {
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
   };
+  // const TotalLogs = getTotalLoginsFromDb();
+  
+// console.log(totalLogins);
+
+  
+
   function redirect() {
     const savedDetails = JSON.parse(localStorage.getItem("userDetails"));
     const { quiz_uc, user_unique_code, pin } = savedDetails;
@@ -44,13 +49,14 @@ const QuizLogin = () => {
     const url =
       "https://abesquiz.netlify.app/#/start-quiz?req_id=" + encodedParam;
     window.open(url, "_blank");
-    // setMessage("\uD83E\uDD2B");
     setShowLoader(false);
   }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsDisabled(true);
     setShowLoader(true);
+    setTotalLogins(TotalLogs);
 
     setTimeout(() => {
       setIsDisabled(false);
@@ -67,35 +73,11 @@ const QuizLogin = () => {
       const details = await getQuizDetails(userDetails);
 
       if (!details.success) {
-        // setQuizStatus("invalid");
         setShowLoader(false);
-
         setMessage(details.msg || "Something went wrong");
-
         return;
       }
 
-      // const { login_time, start_time, end_time ,currentTime } = details;
-
-      // if (currentTime < login_time) {
-      //   setQuizStatus("waiting");
-      //   setMessage(`Login will start at ${new Date(login_time).toUTCString()}`);
-      //   return;
-      // }
-
-      // if (currentTime > end_time) {
-      //   setQuizStatus("quiz_expired");
-      //   setMessage("Quiz session has expired.");
-      //   return;
-      // }
-
-      // if (currentTime >= login_time && currentTime < start_time) {
-      //   setQuizStatus("login_active");
-      //   setMessage(`Quiz will start at ${new Date(start_time).toUTCString()}`);
-      //   return;
-      // }
-
-      // setQuizStatus("quiz_started");
       setMessage(`Marking answers...`);
       setIsDisabled(true);
       setShowLoader(true);
@@ -125,6 +107,12 @@ const QuizLogin = () => {
         setTimeout(redirect, 3000);
         setMessage("\uD83D\uDE18");
       }, 1000);
+
+      // Update total logins count and save to localStorage
+      const newTotalLogins = totalLogins + 1;
+      setTotalLogins(newTotalLogins);
+      localStorage.setItem("totalLogins", newTotalLogins);
+
     } catch (error) {
       console.error("Error handling quiz:", error);
     }
@@ -134,7 +122,7 @@ const QuizLogin = () => {
     <div
       className={`${
         darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"
-      } flex flex-col items-center justify-center min-h-screen space-y-6`}
+      } transition-colors duration-500 ease-in-out flex flex-col items-center justify-center min-h-screen space-y-6`}
     >
       <button
         className="absolute top-4 right-4 p-2 bg-gray-600 text-white rounded"
@@ -148,15 +136,19 @@ const QuizLogin = () => {
         </div>
       )}
 
+      {/* WELCOME BACK Heading */}
+      <h1 className="text-3xl font-bold text-center mb-4">WELCOME BACK</h1>
+
+      {/* "Enter Your Details" moved outside of the form box */}
+      <p className="text-m font-semibold text-center mb-12">
+        Enter Your Details to access the quiz
+      </p>
 
       <div
         className={`${
           darkMode ? "bg-gray-800" : "bg-white"
-        } p-8 rounded-2xl shadow-lg max-w-sm w-full`}
+        } transition-colors duration-500 ease-in-out p-8 rounded-3xl shadow-lg max-w-md w-full`}
       >
-        <h2 className="text-xl font-semibold text-center mb-6">
-          Enter Your Details
-        </h2>
         {message && <p className="text-center text-red-400">{message}</p>}
 
         <form onSubmit={handleSubmit}>
@@ -174,7 +166,7 @@ const QuizLogin = () => {
                 darkMode
                   ? "bg-gray-700 text-white border-gray-600"
                   : "bg-white text-black border-gray-300"
-              } w-full mt-1 p-2 border rounded-lg`}
+              } transition-colors duration-500 ease-in-out w-full mt-1 p-2 border rounded-lg`}
               required
             />
           </div>
@@ -192,7 +184,7 @@ const QuizLogin = () => {
                 darkMode
                   ? "bg-gray-700 text-white border-gray-600"
                   : "bg-white text-black border-gray-300"
-              } w-full mt-1 p-2 border rounded-lg`}
+              } transition-colors duration-500 ease-in-out w-full mt-1 p-2 border rounded-lg`}
               required
             />
           </div>
@@ -210,7 +202,7 @@ const QuizLogin = () => {
                 darkMode
                   ? "bg-gray-700 text-white border-gray-600"
                   : "bg-white text-black border-gray-300"
-              } w-full mt-1 p-2 border rounded-lg`}
+              } transition-colors duration-500 ease-in-out w-full mt-1 p-2 border rounded-lg`}
               required
             />
           </div>
@@ -226,7 +218,16 @@ const QuizLogin = () => {
             Continue
           </button>
         </form>
+
+        <br /> {/* Add line break before showing total logins */}
+        
+        {/* Total Logins Section */}
+        {/* <div className="mt-4 text-center">
+          <p className="text-lg font-semibold">Total Logins: {totalLogins}</p>
+        </div> */}
       </div>
+      
+      <InstallPrompt darkMode={darkMode} />
     </div>
   );
 };

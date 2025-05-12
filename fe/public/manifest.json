@@ -1,0 +1,16 @@
+{
+    "name": "Quiz App",
+    "short_name": "Quiz",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#0f172a",
+    "icons": [
+      {
+        "src": "./favicons/favicon-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      }
+    ]
+  }
+  
