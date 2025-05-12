@@ -56,7 +56,6 @@ const QuizLogin = () => {
     e.preventDefault();
     setIsDisabled(true);
     setShowLoader(true);
-    setTotalLogins(TotalLogs);
 
     setTimeout(() => {
       setIsDisabled(false);
@@ -137,11 +136,11 @@ const QuizLogin = () => {
       )}
 
       {/* WELCOME BACK Heading */}
-      <h1 className="text-3xl font-bold text-center mb-4">WELCOME BACK</h1>
+      <h1 className="text-3xl font-bold text-center mb-4">Welcome Back</h1>
 
       {/* "Enter Your Details" moved outside of the form box */}
       <p className="text-m font-semibold text-center mb-12">
-        Enter Your Details to access the quiz
+        Enter Your Details To Access The Quiz
       </p>
 
       <div
