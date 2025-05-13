@@ -107,10 +107,6 @@ const QuizLogin = () => {
         setMessage("\uD83D\uDE18");
       }, 1000);
 
-      // Update total logins count and save to localStorage
-      const newTotalLogins = totalLogins + 1;
-      setTotalLogins(newTotalLogins);
-      localStorage.setItem("totalLogins", newTotalLogins);
 
     } catch (error) {
       console.error("Error handling quiz:", error);
