@@ -6,17 +6,24 @@ export default function InstallPrompt({ darkMode }) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const handler = (e) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-      setShowPrompt(true);
+    let dismissTimer;
 
-      // trigger fade-in after mounting
-      setTimeout(() => setIsVisible(true), 10);
+    const handler = (e) => {
+      // Only show if manifest is registered
+      if (window.matchMedia("(display-mode: browser)").matches) {
+        e.preventDefault(); // Prevent default mini-infobar
+        setDeferredPrompt(e);
+        setShowPrompt(true);
+        setTimeout(() => setIsVisible(true), 10);
+        dismissTimer = setTimeout(handleDismiss, 10000); // Auto-dismiss after 10s
+      }
     };
 
     window.addEventListener("beforeinstallprompt", handler);
-    return () => window.removeEventListener("beforeinstallprompt", handler);
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handler);
+      clearTimeout(dismissTimer);
+    };
   }, []);
 
   const handleInstall = async () => {
@@ -29,10 +36,8 @@ export default function InstallPrompt({ darkMode }) {
 
   const handleDismiss = () => {
     setIsVisible(false);
-    setTimeout(() => setShowPrompt(false), 300); // match transition duration
+    setTimeout(() => setShowPrompt(false), 300);
   };
-
-  setTimeout(handleDismiss, 10000); // auto-dismiss after 10 seconds
 
   if (!showPrompt) return null;
 
@@ -42,7 +47,11 @@ export default function InstallPrompt({ darkMode }) {
         darkMode
           ? "bg-gray-800 text-white border-white/30"
           : "bg-white text-gray-900 border-gray-300"
-      } ${isVisible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-8 scale-90"}`}
+      } ${
+        isVisible
+          ? "opacity-100 translate-y-0 scale-100"
+          : "opacity-0 translate-y-8 scale-90"
+      }`}
     >
       <p className="text-lg font-semibold mb-2 text-center">
         Add to home screen for quick access!
