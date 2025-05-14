@@ -9,9 +9,10 @@ export function chooseAgent(value) {
     return getAnswerFromOther;
   }
 }
+const URL = import.meta.env.VITE_SERVER_URL
 export async function getQuizDetails(obj) {
   const url =
-    "https://quiz-abes-server-production.up.railway.app/quizDetails"
+    `${URL}/quizDetails`
   const headers = { "Content-Type": "application/json" };
   const body = JSON.stringify(obj)
   try {
@@ -37,7 +38,7 @@ export async function getQuizDetails(obj) {
 
 export async function getQuizQuestions(obj) {
   const url =
-    "https://quiz-abes-server-production.up.railway.app/questions";
+    `${URL}/questions`;
   const headers = { "Content-Type": "application/json" };
   const body = JSON.stringify(obj);
   try {
@@ -59,24 +60,12 @@ export async function getQuizQuestions(obj) {
 export async function submitAnswers(obj, ans) {
   const url =
     "https://faas-blr1-8177d592.doserverless.co/api/v1/web/fn-1c23ee6f-939a-44b2-9c4e-d17970ddd644/abes/submitAnswer";
-  const headers = {
-    accept: "application/json, text/plain, */*",
-    "accept-language": "en-US,en;q=0.9,hi;q=0.8",
-    "content-type": "application/json",
-    dnt: "1",
-    origin: "https://quiz.abesaims.site",
-    priority: "u=1, i",
-    referer: "https://quiz.abesaims.site/",
-    "sec-ch-ua":
-      '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
-    "sec-ch-ua-mobile": "?0",
-    "sec-ch-ua-platform": '"Linux"',
-    "sec-fetch-dest": "empty",
-    "sec-fetch-mode": "cors",
-    "sec-fetch-site": "cross-site",
-    "user-agent":
-      "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
-  };
+    const headers = {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+
+    };
+    
   const body = JSON.stringify({
     quiz_uc: obj.quiz_uc,
     question_id: ans.id,
@@ -106,24 +95,11 @@ export async function submitAnswers(obj, ans) {
 export async function submitAndExitQuiz(obj) {
   const url =
     "https://faas-blr1-8177d592.doserverless.co/api/v1/web/fn-1c23ee6f-939a-44b2-9c4e-d17970ddd644/abes/submitAndExitQuiz";
-  const headers = {
-    accept: "application/json, text/plain, */*",
-    "accept-language": "en-US,en;q=0.9,hi;q=0.8",
-    "content-type": "application/json",
-    dnt: "1",
-    origin: "https://quiz.abesaims.site",
-    priority: "u=1, i",
-    referer: "https://quiz.abesaims.site/",
-    "sec-ch-ua":
-      '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
-    "sec-ch-ua-mobile": "?0",
-    "sec-ch-ua-platform": '"Linux"',
-    "sec-fetch-dest": "empty",
-    "sec-fetch-mode": "cors",
-    "sec-fetch-site": "cross-site",
-    "user-agent":
-      "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
-  };
+    const headers = {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+    };
+    
 
   const body = JSON.stringify({
     quiz_uc: obj.quiz_uc,
@@ -151,7 +127,7 @@ export async function submitAndExitQuiz(obj) {
 
 
 export async function dbCheck(obj,prompt) {
-  const url = "https://quiz-abes-server-production.up.railway.app/dbCheck";
+  const url = `${URL}/dbCheck`;
   
   try {
     const response = await fetch(url, {
