@@ -156,6 +156,7 @@ const QuizLogin = () => {
               value={quizCode}
               maxLength={4}
               minLength={4}
+              autoComplete="off"
               onChange={(e) => setQuizCode(e.target.value.toUpperCase())}
               className={`${
                 darkMode
@@ -173,6 +174,7 @@ const QuizLogin = () => {
               type="text"
               maxLength={12}
               minLength={12}
+              autoComplete="off"
               value={admissionNumber}
               onChange={(e) => setAdmissionNumber(e.target.value.toUpperCase())}
               className={`${
@@ -190,6 +192,7 @@ const QuizLogin = () => {
             <input
               type="password"
               value={pin}
+              autoComplete="off"
               maxLength={4}
               minLength={4}
               onChange={(e) => setPin(e.target.value)}
