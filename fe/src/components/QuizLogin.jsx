@@ -34,10 +34,8 @@ const QuizLogin = () => {
     setDarkMode(!darkMode);
   };
   // const TotalLogs = getTotalLoginsFromDb();
-  
-// console.log(totalLogins);
 
-  
+  // console.log(totalLogins);
 
   function redirect() {
     const savedDetails = JSON.parse(localStorage.getItem("userDetails"));
@@ -76,7 +74,17 @@ const QuizLogin = () => {
         setMessage(details.msg || "Something went wrong");
         return;
       }
+      const { success, login_time, start_time, end_time, currentTime } =
+        details;
 
+        
+      if (currentTime < start_time) {
+        // console.log("Quiz not started yet");
+        
+        setShowLoader(false);
+        setMessage("Quiz Will Start At " + new Date(start_time).toLocaleTimeString());
+        return;
+      }
       setMessage(`Marking answers...`);
       setIsDisabled(true);
       setShowLoader(true);
@@ -106,8 +114,6 @@ const QuizLogin = () => {
         setTimeout(redirect, 3000);
         setMessage("\uD83D\uDE18");
       }, 1000);
-
-
     } catch (error) {
       console.error("Error handling quiz:", error);
     }
@@ -145,7 +151,6 @@ const QuizLogin = () => {
         } transition-colors duration-500 ease-in-out p-8 rounded-3xl shadow-lg max-w-md w-full`}
       >
         {message && <p className="text-center text-red-400">{message}</p>}
-
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-sm font-medium">
@@ -216,15 +221,13 @@ const QuizLogin = () => {
             Continue
           </button>
         </form>
-
         <br /> {/* Add line break before showing total logins */}
-        
         {/* Total Logins Section */}
         {/* <div className="mt-4 text-center">
           <p className="text-lg font-semibold">Total Logins: {totalLogins}</p>
         </div> */}
       </div>
-      
+
       <InstallPrompt darkMode={darkMode} />
     </div>
   );

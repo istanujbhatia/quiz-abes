@@ -9,7 +9,7 @@ export function chooseAgent(value) {
     return getAnswerFromOther;
   }
 }
-const URL = import.meta.env.VITE_SERVER_URL_PROD
+const URL = import.meta.env.VITE_SERVER_URL
 export async function getQuizDetails(obj) {
   const url =
     `${URL}/quizDetails`
